@@ -39,13 +39,26 @@ const fs = require('node:fs');
 //   });
 // });
 
-const path = './data/';
-fs.readdir(path, function (err, files) {
+// const path = './data/';
+// fs.readdir(path, function (err, files) {
+//   if (err) throw err;
+//   files.forEach(function (file) {
+//     console.log(path + file);
+//     fs.stat(path + file, function (err, stats) {
+//       console.log(stats);
+//     })
+//   });
+// });
+
+// const pathExists = fs.existsSync(path);
+
+// console.log(pathExists);
+
+fs.mkdir('./newdir', '0666', function (err) {
   if (err) throw err;
-  files.forEach(function (file) {
-    console.log(path + file);
-    fs.stat(path + file, function (err, stats) {
-      console.log(stats);
-    })
+  console.log('Created newdir');
+  fs.rmdir('./newdir', function (err) {
+    if (err) throw err;
+    console.log('Removed newdir');
   });
-});
+})
