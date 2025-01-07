@@ -63,7 +63,7 @@ const fs = require('node:fs');
 //   });
 // })
 
-const file = fs.createReadStream('./data/results.txt', { flags: 'r' });
+// const file = fs.createReadStream('./data/results.txt', { flags: 'r' });
 const out = fs.createWriteStream('./data/results2.txt', { flags: 'w' });
 
 // file.on('data', function (data) {
@@ -78,4 +78,11 @@ const out = fs.createWriteStream('./data/results2.txt', { flags: 'w' });
 //   });
 // });
 
-file.pipe(out);
+// file.pipe(out);
+
+const file = fs.createWriteStream('./data/results.txt', { flags: 'a' });
+
+file.write('HELLO!\n');
+file.end(function () {
+  console.log('done');
+});
