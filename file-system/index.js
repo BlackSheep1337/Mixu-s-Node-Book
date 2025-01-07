@@ -54,11 +54,26 @@ const fs = require('node:fs');
 
 // console.log(pathExists);
 
-fs.mkdir('./newdir', '0666', function (err) {
-  if (err) throw err;
-  console.log('Created newdir');
-  fs.rmdir('./newdir', function (err) {
-    if (err) throw err;
-    console.log('Removed newdir');
+// fs.mkdir('./newdir', '0666', function (err) {
+//   if (err) throw err;
+//   console.log('Created newdir');
+//   fs.rmdir('./newdir', function (err) {
+//     if (err) throw err;
+//     console.log('Removed newdir');
+//   });
+// })
+
+const file = fs.createReadStream('./data/results.txt', { flags: 'r' });
+const out = fs.createWriteStream('./data/results2.txt', { flags: 'w' });
+
+file.on('data', function (data) {
+  console.log('data', data);
+  out.write(data);
+});
+
+file.on('end', function () {
+  console.log('end');
+  out.end(function () {
+    console.log('Finished writing to a file');
   });
-})
+});
