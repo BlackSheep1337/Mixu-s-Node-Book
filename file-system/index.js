@@ -66,14 +66,16 @@ const fs = require('node:fs');
 const file = fs.createReadStream('./data/results.txt', { flags: 'r' });
 const out = fs.createWriteStream('./data/results2.txt', { flags: 'w' });
 
-file.on('data', function (data) {
-  console.log('data', data);
-  out.write(data);
-});
+// file.on('data', function (data) {
+//   console.log('data', data);
+//   out.write(data);
+// });
 
-file.on('end', function () {
-  console.log('end');
-  out.end(function () {
-    console.log('Finished writing to a file');
-  });
-});
+// file.on('end', function () {
+//   console.log('end');
+//   out.end(function () {
+//     console.log('Finished writing to a file');
+//   });
+// });
+
+file.pipe(out);
