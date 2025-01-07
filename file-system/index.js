@@ -10,7 +10,19 @@ const arrayData = ['hello', 'world']
 //   console.log(data);
 // });
 
-fs.writeFile('example.txt', fileData, function (err, data) {
+// fs.writeFile('example.txt', fileData, function (err, data) {
+//   if (err) throw err;
+//   console.log('File write completed');
+// });
+
+fs.open('./index.html', 'w', function (err, fd) {
   if (err) throw err;
-  console.log('File write completed');
+  const buff =  Buffer.from('bbbbbbb\n');
+  fs.write(fd, buff, 0, buff.length, null, function (err, written, buffer) {
+    if (err) throw err;
+    console.log(err, written, buffer);
+    fs.close(fd, function () {
+      console.log('Done');
+    });
+  });
 });
