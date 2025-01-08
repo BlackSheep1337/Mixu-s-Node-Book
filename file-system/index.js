@@ -1,4 +1,5 @@
 const fs = require('node:fs');
+const PathInterator = require('./pathinterator.js');
 
 // const fileData = 'data to the file';
 // const arrayData = ['hello', 'world']
@@ -87,20 +88,54 @@ const fs = require('node:fs');
 //   console.log('done');
 // });
 
+// function findFile(path, searchFile, callback) {
+//   fs.readdir(path, function (err, files) {
+//     if (err) { return callback(err); }
+//     files.forEach(function (file) {
+//       fs.stat(path + '/' + file, function () {
+//         if (err) { return callback(err); }
+//         if (file === searchFile) {
+//           callback(undefined, path + '/' + file);
+//         } else {
+//           findFile(path + '/' + file, searchFile, callback);
+//         }
+//       });
+//     });
+//   });
+// }
+
+// function findFile(path, searchFile, callback) {
+//   function isMatch(err, stats) {
+//     if (err) { return callback(err); }
+//     if (stats.isFile()) {
+//       callback(undefined, path + '/' + searchFile);
+//     } else if (stats.isDirectory()) {
+//       statDirectory(path + '/' + searchFile, isMatch);
+//     }
+//   }
+//   statDirectory(path, isMatch);
+// }
+
+// function statDirectory(path, callback) {
+//   fs.readdir(path, function (err, files) {
+//     if (err) { return callback(err); }
+//     files.forEach(function (file) {
+//       fs.stat(path + '/' + file, callback);
+//     });
+//   });
+// }
+
+
+
 function findFile(path, searchFile, callback) {
-  fs.readdir(path, function (err, files) {
-    if (err) { return callback(err); }
-    files.forEach(function (file) {
-      fs.stat(path + '/' + file, function () {
-        if (err) { return callback(err); }
-        if (file === searchFile) {
-          callback(undefined, path + '/' + file);
-        } else {
-          findFile(path + '/' + file, searchFile, callback);
-        }
-      });
-    });
+  const pi = new PathInterator();
+  pi.on('file', function (file, stats) {
+    if (file === searchFile) {
+      callback(undefined, file);
+    }
   });
+  pi.on('error', callback);
+  pi.interate(path);
 }
 
 findFile('./test', 'needle.txt', function (err, path) {
