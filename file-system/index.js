@@ -64,7 +64,7 @@ const fs = require('node:fs');
 // })
 
 // const file = fs.createReadStream('./data/results.txt', { flags: 'r' });
-const out = fs.createWriteStream('./data/results2.txt', { flags: 'w' });
+// const out = fs.createWriteStream('./data/results2.txt', { flags: 'w' });
 
 // file.on('data', function (data) {
 //   console.log('data', data);
@@ -80,9 +80,30 @@ const out = fs.createWriteStream('./data/results2.txt', { flags: 'w' });
 
 // file.pipe(out);
 
-const file = fs.createWriteStream('./data/results.txt', { flags: 'a' });
+// const file = fs.createWriteStream('./data/results.txt', { flags: 'a' });
 
-file.write('HELLO!\n');
-file.end(function () {
-  console.log('done');
+// file.write('HELLO!\n');
+// file.end(function () {
+//   console.log('done');
+// });
+
+function findFile(path, searchFile, callback) {
+  fs.readdir(path, function (err, files) {
+    if (err) { return callback(err); }
+    files.forEach(function (file) {
+      fs.stat(path + '/' + file, function () {
+        if (err) { return callback(err); }
+        if (file === searchFile) {
+          callback(undefined, path + '/' + file);
+        } else {
+          findFile(path + '/' + file, searchFile, callback);
+        }
+      });
+    });
+  });
+}
+
+findFile('./test', 'needle.txt', function (err, path) {
+  if (err) { throw err; }
+  console.log('Found file at: ' + path);
 });
